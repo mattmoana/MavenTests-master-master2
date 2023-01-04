@@ -1,4 +1,4 @@
-package Tests;
+package Tests.api.tests.restaAssured;
 
 import Cat.Cat;
 import Dog.Dog;

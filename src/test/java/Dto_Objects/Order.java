@@ -8,6 +8,18 @@ public class Order {
     private String comment;
     private Long id;
 
+    public Order(String status, Long courierId, String customerName, String customerPhone, String comment) {
+        this.status = status;
+        this.courierId = courierId;
+        this.customerName = customerName;
+        this.customerPhone = customerPhone;
+        this.comment = comment;
+    }
+
+    public Order() {
+
+    }
+
     public String getStatus() {
         return status;
     }
