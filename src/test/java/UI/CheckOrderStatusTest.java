@@ -1,38 +1,37 @@
 package UI;
 
-import com.codeborne.selenide.Condition;
-import org.junit.jupiter.api.Assertions;
+import UI.Functions.CreateOrderPage;
+import UI.Functions.LoginPage;
+import UI.Functions.StatusPage;;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CheckOrderStatusTest {
-
+    LoginPage loginPage = new LoginPage();
+    StatusPage statusPage = new StatusPage();
+    CreateOrderPage createOrderPage = new CreateOrderPage();
+    @BeforeEach
+    public void openStartPage() {
+        loginPage = open("http://51.250.6.164:3000/signin", LoginPage.class);
+        createOrderPage = loginPage.login("user2", "hellouser2");
+        statusPage = createOrderPage.login();
+    }
     @Test
-    public void checkOrderStatusPositive() {
-        open("http://51.250.6.164:3000/signin");
-        $(By.id("username")).setValue("user2");
-        $(By.id("password")).setValue(("hellouser2"));
-        $(By.xpath("//*[@data-name='signIn-button']")).click();
-        $(By.xpath("//button[@class='header__button_check-order']")).click();
-        $(By.xpath("//input[@type='number']")).setValue("1890");
-        $(By.xpath("//button[@type='submit']")).click();
-        $(By.xpath("//h3[@class='status-list__description status-list__description_active']")).shouldBe(Condition.visible);
-        $(By.xpath("//a[@data-name='logout-button']")).click();
+    public void checkOrderStatusWrongNumber() {
+        createOrderPage.clickStatusButton();
+        createOrderPage.checkPopUpText("Введите номер заказа");
+        createOrderPage.typeOrderNumber("9890");
+        createOrderPage.clickSubmitButton();
+        statusPage.getNotFoundText("Заказ не найден");
     }
 
     @Test
-    public void checkOrderStatusWrongNumber() {
-        open("http://51.250.6.164:3000/signin");
-        $(By.id("username")).setValue("user2");
-        $(By.id("password")).setValue(("hellouser2"));
-        $(By.xpath("//*[@data-name='signIn-button']")).click();
-        $(By.xpath("//button[@class='header__button_check-order']")).click();
-        $(By.xpath("//input[@type='number']")).setValue("9890");
-        $(By.xpath("//button[@type='submit']")).click();
-        String errorMessage = $(By.xpath("//h1[@class='not-found__title']")).shouldBe(Condition.visible).getText();
-        Assertions.assertEquals("Заказ не найден", errorMessage, "Wrong text");
+    public void checkOrderPositiveCase(){
+        createOrderPage.clickStatusButton();
+        createOrderPage.typeOrderNumber("1890");
+        createOrderPage.clickSubmitButton();
+        statusPage.getOrderCreatedStatus("OPEN");
+        statusPage.getOrderCreatedText("Заказ создан");
     }
 }
