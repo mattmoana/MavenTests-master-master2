@@ -67,8 +67,9 @@ public class CreateOrderPage {
     }
     @FindBy(how = How.XPATH, using = "//button[@type='submit']")
     private SelenideElement SubmitButton;
-    public void clickSubmitButton(){
+    public StatusPage clickSubmitButton(){
         SubmitButton.click();
+        return Selenide.page(StatusPage.class);
     }
     public StatusPage login(){
         return Selenide.page(StatusPage.class);

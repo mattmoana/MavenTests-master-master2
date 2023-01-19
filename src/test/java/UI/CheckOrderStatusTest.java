@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CheckOrderStatusTest {
-    LoginPage loginPage = new LoginPage();
-    StatusPage statusPage = new StatusPage();
+    LoginPage loginPage;
+    StatusPage statusPage;
     CreateOrderPage createOrderPage = new CreateOrderPage();
     @BeforeEach
     public void openStartPage() {
         loginPage = open("http://51.250.6.164:3000/signin", LoginPage.class);
         createOrderPage = loginPage.login("user2", "hellouser2");
-        statusPage = createOrderPage.login();
+
     }
     @Test
     public void checkOrderStatusWrongNumber() {
         createOrderPage.clickStatusButton();
         createOrderPage.checkPopUpText("Введите номер заказа");
         createOrderPage.typeOrderNumber("9890");
-        createOrderPage.clickSubmitButton();
+        statusPage = createOrderPage.clickSubmitButton();
         statusPage.getNotFoundText("Заказ не найден");
     }
 
